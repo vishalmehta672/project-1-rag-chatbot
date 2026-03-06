@@ -22,23 +22,19 @@ The project is designed as part of a **6-month AI Engineer learning journey** an
 
 ---
 
-# High-Level Architecture
 
-Document
-↓
-Text Extraction
-↓
-Text Chunking
-↓
-Embeddings Generation
-↓
-Vector Database (Qdrant)
-↓
-Semantic Search
-↓
-LLM Answer Generation
-↓
-API Response
+
+## Architecture Details
+
+1. **PDF** - Input documents (knowledge base)
+2. **Text Extraction** - Extract text content from PDF files using PyPDF
+3. **Improved Chunking (with overlap)** - Split text into manageable chunks with overlap to maintain context
+4. **Embeddings** - Convert text chunks into dense vector representations using Sentence Transformers
+5. **Vector DB (Qdrant)** - Store embeddings in Qdrant for efficient semantic search
+6. **Semantic Search (Top-K retrieval)** - Find most relevant chunks based on query similarity
+7. **Prompt Engineering** - Construct optimized prompts with retrieved context
+8. **LLM** - Generate answers using OpenAI API with retrieved context
+9. **FastAPI API** - Expose the RAG system through REST endpoints
 
 ---
 
@@ -275,6 +271,29 @@ Planned enhancements:
 * Testing setup
 * Code structure improvements
 
+
+# High-Level Architecture
+
+```
+PDF
+ ↓
+Text Extraction
+ ↓
+Improved Chunking (with overlap)
+ ↓
+Embeddings
+ ↓
+Vector DB (Qdrant)
+ ↓
+Semantic Search (Top-K retrieval)
+ ↓
+Prompt Engineering
+ ↓
+LLM
+ ↓
+FastAPI API
+```
+
 ---
 
 # Learning Outcomes So Far
@@ -291,7 +310,7 @@ By Day 3 the following concepts have been implemented:
 
 ---
 
-# Author
+Recap — What You Achieved by Day 4
 
-Vishal Mehta
-AI Engineer Learning Journey
+* Built a complete RAG-based chatbot system
+

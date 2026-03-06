@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 
 def load_pdf(file_path):
+    print("Loading document...")
     reader = PdfReader(file_path)
     text = ""
 
