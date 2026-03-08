@@ -2,7 +2,10 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 from app.utils.embeddings import create_embedding
 
-client = QdrantClient(host="localhost", port=6333)
+client = QdrantClient(
+    host="qdrant",
+    port=6333
+)
 
 COLLECTION_NAME = "documents"
 

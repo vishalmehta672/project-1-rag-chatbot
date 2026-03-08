@@ -4,6 +4,8 @@ import os
 import shutil
 from pathlib import Path
 
+from app.utils.cache import get_cached_response
+
 router = APIRouter()
 
 # Define data folder path
@@ -16,6 +18,10 @@ def home():
 @router.post("/ask")
 def ask(question: str):
 
+    cached = get_cached_response(question)
+    if cached:
+        print("Returning cached response...")
+        return {"answer": cached}
     answer = ask_question(question)
 
     return {"answer": answer}
@@ -51,4 +57,10 @@ async def upload_documents(file: UploadFile = File(...)):
         await file.close()
 
 
+
+@router.get("/ingest-pipeline")
+def ingest():
+    from app.services.ingest_pipeline import ingest_document
+    ingest_document(str(DATA_FOLDER / "oops.pdf"))
+    return {"message": "Ingestion completed successfully"}
 
