@@ -1,5 +1,5 @@
 
-from app.services.document_loader import load_pdf
+from app.services.document_service import load_pdf
 from app.utils.embeddings import create_embedding
 from app.utils.text_splitter import split_text
 from app.services.vector_store import store_chunks
