@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv(override=False)  # Load .env but DON'T override Docker's env vars
+
 from fastapi import FastAPI
 from app.api.routes import router
 

@@ -1,66 +1,91 @@
-# Project 1 — AI Knowledge Base Chatbot (RAG)
+# AI Knowledge Base Chatbot (RAG)
 
-## Overview
+## Project Overview
 
-This project builds an **AI-powered knowledge base chatbot** that can answer questions from uploaded documents (PDFs).
+This project implements a **Retrieval-Augmented Generation (RAG) system** that allows users to ask questions about documents.
 
-The system uses **Retrieval-Augmented Generation (RAG)** to retrieve relevant information from documents and generate accurate responses using a Large Language Model.
+Users can upload PDF files and query the knowledge inside them through an API. The system retrieves relevant document chunks using semantic search and generates answers using an LLM.
 
-The project is designed as part of a **6-month AI Engineer learning journey** and follows a **production-style architecture similar to real AI systems used in companies**.
-
----
-
-# Project Goals
-
-* Learn how **RAG systems work**
-* Build a **document ingestion pipeline**
-* Generate **embeddings**
-* Store embeddings in a **vector database**
-* Retrieve relevant document chunks
-* Use an LLM to generate answers
-* Build an **API service using FastAPI**
+This project was built as part of a **Generative AI engineering learning journey** focusing on production-style system design.
 
 ---
 
+# Key Features
 
+Document upload API
 
-## Architecture Details
+Document ingestion pipeline
 
-1. **PDF** - Input documents (knowledge base)
-2. **Text Extraction** - Extract text content from PDF files using PyPDF
-3. **Improved Chunking (with overlap)** - Split text into manageable chunks with overlap to maintain context
-4. **Embeddings** - Convert text chunks into dense vector representations using Sentence Transformers
-5. **Vector DB (Qdrant)** - Store embeddings in Qdrant for efficient semantic search
-6. **Semantic Search (Top-K retrieval)** - Find most relevant chunks based on query similarity
-7. **Prompt Engineering** - Construct optimized prompts with retrieved context
-8. **LLM** - Generate answers using OpenAI API with retrieved context
-9. **FastAPI API** - Expose the RAG system through REST endpoints
+Semantic search using vector embeddings
+
+Context-aware question answering
+
+LLM integration
+
+Caching for faster responses
+
+Logging and debugging support
+
+Containerized application using Docker
+
+Basic testing using pytest
+
+---
+
+# System Architecture
+
+Document Ingestion Pipeline
+
+PDF Document
+↓
+Text Extraction
+↓
+Text Chunking (with overlap)
+↓
+Embedding Generation
+↓
+Vector Storage
+
+Query Pipeline
+
+User Question
+↓
+Embedding Generation
+↓
+Vector Similarity Search
+↓
+Retrieve Relevant Chunks
+↓
+Prompt Construction
+↓
+LLM Response Generation
+↓
+Return Answer
 
 ---
 
 # Technology Stack
 
-Backend
+Backend Framework
+FastAPI
 
-* Python
-* FastAPI
+Language
+Python
 
-AI / NLP
-
-* Sentence Transformers
-* OpenAI API
+Embedding Model
+Sentence Transformers
 
 Vector Database
+Qdrant
 
-* Qdrant
+LLM Provider
+OpenAI
 
-Document Processing
+Containerization
+Docker
 
-* PyPDF
-
-Infrastructure
-
-* Docker
+Testing
+Pytest
 
 ---
 
@@ -74,243 +99,167 @@ app
  utils
 
 data
+uploads
 tests
+
+docs
+commands.md
 
 main.py
 requirements.txt
+Dockerfile
 README.md
 
 ---
 
-# Environment Setup
+# Development Progress
 
-## 1. Install Python
+## Day 1 — Environment Setup
 
-Python version used in this project:
+Created project structure.
 
-Python 3.11
+Set up Python environment and installed required dependencies.
 
-Recommended tool for version management:
+Configured FastAPI server for API development.
 
-pyenv
-
----
-
-## 2. Create Virtual Environment
-
-Create a project virtual environment and activate it before installing dependencies.
-
-This ensures dependencies remain isolated for the project.
-
----
-
-## 3. Install Required Python Libraries
-
-Install the required libraries for:
-
-* API development
-* embeddings generation
-* PDF processing
-* vector database client
-
-The main libraries used are:
-
-FastAPI
-Uvicorn
-Sentence Transformers
-PyPDF
-Qdrant Client
-OpenAI
-
----
-
-## 4. Run Vector Database
-
-The project uses **Qdrant** as the vector database.
-
-Run Qdrant locally using Docker.
-
-Once started, Qdrant will run on port **6333**.
-
-This database stores document embeddings and enables semantic search.
-
----
-
-# Day 1 — Project Foundation
-
-Objectives:
-
-* Create the project structure
-* Install dependencies
-* Set up the FastAPI application
-* Test embedding generation
-
-Tasks completed:
-
-1. Created the project folder and directory structure.
-2. Installed all required Python libraries.
-3. Set up a FastAPI server.
-4. Tested embedding generation using Sentence Transformers.
+Tested embedding generation to ensure models load correctly.
 
 Outcome:
-
-We confirmed that embeddings can be generated successfully.
-
-This means text can now be converted into vectors.
+Project foundation and environment ready.
 
 ---
 
-# Day 2 — Document Ingestion Pipeline
+## Day 2 — Document Ingestion Pipeline
 
-Objective:
+Implemented PDF document loading.
 
-Build the pipeline that converts documents into searchable knowledge.
+Extracted text content from documents.
 
-Pipeline steps:
+Created text chunking logic to split documents into manageable sections.
 
-PDF Document
-↓
-Extract text
-↓
-Split text into smaller chunks
-↓
-Generate embeddings for each chunk
-↓
-Store embeddings in the vector database
+Generated embeddings for each chunk.
 
-Tasks completed:
-
-1. Implemented PDF text extraction.
-2. Implemented text chunking logic.
-3. Generated embeddings for each chunk.
-4. Stored embeddings and chunk metadata in Qdrant.
+Stored embeddings in the vector database.
 
 Outcome:
-
-Documents are now stored as **vectorized knowledge** inside the vector database.
-
-This allows semantic search later.
+Documents converted into searchable vector knowledge.
 
 ---
 
-# Day 3 — Query and Retrieval System
+## Day 3 — Query and Retrieval System
 
-Objective:
+Implemented semantic search.
 
-Allow users to ask questions and retrieve relevant document information.
+Converted user questions into embeddings.
 
-Query pipeline:
+Retrieved relevant document chunks using vector similarity.
 
-User Question
-↓
-Convert question into embedding
-↓
-Search vector database
-↓
-Retrieve most relevant chunks
-↓
-Send retrieved context to LLM
-↓
-Generate answer
-↓
-Return response via API
+Connected retrieval results with LLM to generate answers.
 
-Tasks completed:
-
-1. Implemented semantic search using Qdrant.
-2. Retrieved the most relevant document chunks.
-3. Built a query pipeline combining retrieval and LLM generation.
-4. Created an API endpoint to accept user questions.
+Created API endpoint for question answering.
 
 Outcome:
-
-The system can now answer questions based on uploaded documents.
-
-This completes the **core RAG workflow**.
+System can answer questions based on uploaded documents.
 
 ---
 
-# Current System Workflow
+## Day 4 — RAG Quality Improvements
 
-Document Ingestion:
+Improved chunking strategy by adding chunk overlap.
 
-PDF
-↓
-Text Extraction
-↓
-Text Chunking
-↓
-Embeddings Generation
-↓
-Vector Storage
+Enhanced retrieval strategy by increasing top-k search results.
 
-Query Processing:
+Introduced structured prompts to reduce hallucinations.
 
-User Question
-↓
-Embedding Generation
-↓
-Vector Search
-↓
-Retrieve Context
-↓
-LLM Response
+Added logging for debugging and system transparency.
+
+Outcome:
+Improved reliability and accuracy of generated answers.
 
 ---
 
-# Next Steps (Day 4)
+## Day 5 — API-Based Document Upload
 
-Next improvements will focus on making the system **closer to production quality**.
+Implemented document upload endpoint.
 
-Planned enhancements:
+Connected uploaded files to the ingestion pipeline.
 
-* Improved text chunking strategy
-* Better prompt engineering
-* Query optimization
-* Logging and debugging
-* Testing setup
-* Code structure improvements
+Converted ingestion script into reusable service.
 
+Improved project structure and service organization.
 
-# High-Level Architecture
-
-```
-PDF
- ↓
-Text Extraction
- ↓
-Improved Chunking (with overlap)
- ↓
-Embeddings
- ↓
-Vector DB (Qdrant)
- ↓
-Semantic Search (Top-K retrieval)
- ↓
-Prompt Engineering
- ↓
-LLM
- ↓
-FastAPI API
-```
+Outcome:
+System can now ingest documents dynamically via API.
 
 ---
 
-# Learning Outcomes So Far
+## Day 6 — Production Improvements
 
-By Day 3 the following concepts have been implemented:
+Implemented response caching to reduce repeated LLM calls.
 
-* RAG architecture
-* Embeddings generation
-* Vector databases
-* Semantic search
-* LLM integration
-* FastAPI backend service
-* Document ingestion pipelines
+Added unit tests using pytest.
+
+Containerized the application using Docker.
+
+Prepared the system for deployment.
+
+Outcome:
+Project is production-ready and easier to deploy.
 
 ---
 
-Recap — What You Achieved by Day 4
+# API Endpoints
 
-* Built a complete RAG-based chatbot system
+Upload Document
 
+Used to upload and ingest PDF documents into the knowledge base.
+
+Ask Question
+
+Used to query the knowledge base and receive AI-generated answers.
+
+---
+
+# Learning Outcomes
+
+Through this project the following concepts were implemented:
+
+Retrieval-Augmented Generation (RAG)
+
+Vector embeddings
+
+Vector similarity search
+
+Semantic document retrieval
+
+Prompt engineering
+
+AI service architecture
+
+API development with FastAPI
+
+Containerization with Docker
+
+Testing with pytest
+
+---
+
+# Future Improvements
+
+LangChain integration
+
+Streaming responses
+
+Better document metadata support
+
+Cloud deployment
+
+Multi-document knowledge bases
+
+---
+
+# Author
+
+Vishal Mehta
+
+Generative AI Engineering Learning Journey

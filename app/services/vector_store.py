@@ -1,11 +1,25 @@
+import os
+import uuid
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance
 from app.utils.embeddings import create_embedding
 
-client = QdrantClient(
-    host="qdrant",
-    port=6333
-)
+# Lazy initialization - client created on first use
+_client = None
+
+def get_client():
+    """Get or create Qdrant client lazily"""
+    global _client
+    if _client is None:
+        # Read environment variables when actually creating the client
+        host = os.getenv("QDRANT_HOST", "localhost")
+        port = int(os.getenv("QDRANT_PORT", 6333))
+        print(f"Connecting to Qdrant at {host}:{port}")
+        _client = QdrantClient(
+            host=host,
+            port=port
+        )
+    return _client
 
 COLLECTION_NAME = "documents"
 
@@ -13,53 +27,65 @@ COLLECTION_NAME = "documents"
 def create_collection():
     """Create collection if it does not exist"""
 
-    collections = client.get_collections().collections
-    names = [c.name for c in collections]
+    try:
+        collections = get_client().get_collections().collections
+        names = [c.name for c in collections]
 
-    if COLLECTION_NAME not in names:
-        print("Creating Qdrant collection...")
+        if COLLECTION_NAME not in names:
+            print("Creating Qdrant collection...")
 
-        client.create_collection(
-            collection_name=COLLECTION_NAME,
-            vectors_config=VectorParams(
-                size=384,           # embedding size for all-MiniLM-L6-v2
-                distance=Distance.COSINE
-            ),
-        )
+            get_client().create_collection(
+                collection_name=COLLECTION_NAME,
+                vectors_config=VectorParams(
+                    size=384,
+                    distance=Distance.COSINE
+                ),
+            )
+    except Exception as e:
+        print("Error checking/creating collection:", e)
+        raise
 
 
 def store_chunks(chunks, embeddings):
+    """Store document chunks into Qdrant"""
 
-    create_collection()   # ← ensure collection exists
+    create_collection()
 
-    print("Storing vectors...")
+    print(f"Storing {len(chunks)} vectors...")
+
     points = []
 
-    for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
-        points.append(
-            PointStruct(
-                id=i,
-                vector=embedding,
-                payload={"text": chunk}
-            )
+    for chunk, embedding in zip(chunks, embeddings):
+
+        point = PointStruct(
+            id=str(uuid.uuid4()),   # unique id
+            vector=embedding,
+            payload={
+                "text": chunk
+            }
         )
 
-    client.upsert(
+        points.append(point)
+
+    get_client().upsert(
         collection_name=COLLECTION_NAME,
         points=points
     )
 
+    print("Vectors stored successfully.")
 
-def search_chunks(query):
+
+def search_chunks(query, limit=5):
+    """Search similar chunks"""
 
     print("Searching vectors...")
 
     query_vector = create_embedding(query)
 
-    results = client.query_points(
+    results = get_client().query_points(
         collection_name=COLLECTION_NAME,
         query=query_vector.tolist(),
-        limit=5
+        limit=limit
     )
 
     chunks = [hit.payload["text"] for hit in results.points]
